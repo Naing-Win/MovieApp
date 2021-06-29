@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>List - Actor</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}">
+</head>
+<body>
+	<header th:replace="fragments/header"></header>
+	<div class="container">
+		<a type="button" th:href="@{/actor/create}" class="btn btn-sm btn-primary mt-2">Add</a>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="actor : ${actors}">
+					<td th:text="${actor.id}"></td>
+					<td th:text="${actor.name}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Detail - Movie</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}">
+</head>
+<body>
+	<header th:replace="fragments/header"></header>
+	<div class="container mt-3">
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="card">
+					<img style="height: 30rem;" alt="..." th:src="@{${movie.getPhotosPath}}">
+				</div>
+			</div>
+			<div class="col-sm-8">
+				<div class="row">
+						<h3 th:text="${movie.name} + '  ' + ${movie.genre}"></h3>
+					<div>
+						<label style="font-size: 20px;">Released :</label>
+						<span th:text="${movie.year}"></span>
+					</div>
+				</div>
+				<div>
+					<label style="font-size: 20px;">Starring :</label>
+					<ul th:each="actor : ${movie.actors}">
+						<li th:text="${actor.name}"></li>
+					</ul>
+				</div>
+				<div>
+					<label style="font-size: 20px;">Description :</label>
+					<p
+						th:text="'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + ${movie.description}"></p>
+				</div>
+				<div>
+					<a type="button" class="btn btn-primary">DOWNLOAD</a>
+					<a type="button" th:href="@{/movie/update/{id}(id=${movie.id})}" class="btn btn-success">UPDATE</a>
+					<a type="button" class="btn btn-danger">DELETE</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

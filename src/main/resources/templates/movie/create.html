@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Create - Movie</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}">
+<body>
+	<header th:replace="fragments/header"></header>
+	<div class="container mt-4">
+		<form action="#" th:action="@{/movie/create}" th:object="${movie}" method="post" enctype="multipart/form-data">
+		<div class="form-group">
+			<div class="row">
+				<div class="col">
+					<label>Name</label> 
+					<input type="text" class="form-control" th:field="*{name}" placeholder="Enter movie name." th:classappend="${#fields.hasErrors('name') ? 'is-invalid' : ''}">
+					<span class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red;"></span>
+				</div>
+				<div class="col">
+					<label>Year</label>
+					<select class="form-control" th:field="*{year}" th:classappend="${#fields.hasErrors('year') ? 'is-invalid' : ''}">
+						<option value="0">-Selected year-</option>
+						<option th:each="year : ${#numbers.sequence(1970, #dates.year(#dates.createNow()))}"
+					            th:value="${year}" th:text="${year}">
+					    </option>
+					</select>
+					<span class="invalid-feedback" th:if="${#fields.hasErrors('year')}" th:errors="*{year}" style="color: red;"></span>
+				</div>
+				<div class="col">
+					<label>Image</label>
+					<input required="required" type="file" name="file" accept="image/png, image/jpeg" class="form-control" th:classappend="${#fields.hasErrors('image') ? 'is-invalid' : ''}">
+					<span class="invalid-feedback" th:if="${#fields.hasErrors('image')}" th:errors="*{image}" style="color: red;"></span>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col">
+					<label>Actor<span> (You can select multiple.)</span></label>
+					<select class="form-control" th:field="*{actors}" multiple="multiple" th:classappend="${#fields.hasErrors('actors') ? 'is-invalid' : ''}">
+						<option th:each="actor : ${actors}" th:value="${actor.id}" th:text="${actor.name}"></option>
+					</select>
+					<span class="invalid-feedback" th:if="${#fields.hasErrors('actors')}" th:errors="*{actors}" style="color: red;"></span>
+				</div>
+				
+				<div class="col">
+					<label>Genre<span> (You can select multiple.)</span></label>
+					<select class="form-control" th:field="*{genre}" multiple="multiple" th:classappend="${#fields.hasErrors('genre') ? 'is-invalid' : ''}">
+						<!-- <option th:selected="${movie.id == 0}" th:value="${0}"> -- </option> -->
+					    <option th:each="c : ${T(com.nw.movie.model.Genre).values()}" th:value="${c.name()}" th:text="${c.name()}"></option>
+					</select>
+					<span class="invalid-feedback" th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}" style="color: red;"></span>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col">
+					<label>Description</label>
+					<textarea rows="5" cols="7" th:field="*{description}" class="form-control" th:classappend="${#fields.hasErrors('description') ? 'is-invalid' : ''}"></textarea>
+					<span class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}" style="color: red;"></span>
+				</div>
+				<div class="col">
+					<label>Language<span> (You can select multiple.)</span></label>
+					<select class="form-control" th:field="*{language}" multiple="multiple" th:classappend="${#fields.hasErrors('language') ? 'is-invalid' : ''}">
+						<option th:each="colorOpt : ${T(com.nw.movie.model.Language).values()}" 
+        					th:value="${colorOpt}" th:text="${colorOpt}"></option>
+					</select>
+					<span class="invalid-feedback" th:if="${#fields.hasErrors('language')}" th:errors="*{language}" style="color: red;"></span>
+				</div>
+			</div>
+			
+			<div class="mt-2">
+				<input type="submit" value="Save" class="btn btn-primary btn-sm">
+			</div>
+		</div>
+		</form>
+	</div>
+	<footer style="position: fixed;" th:replace="fragments/footer"></footer>
+</body>
+</html>

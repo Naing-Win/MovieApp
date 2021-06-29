@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Create - Actor</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}">
+</head>
+<body>
+	<header th:replace="fragments/header"></header>
+	<div class="container mt-4">
+		<form action="#" th:action="@{/actor/create}" th:object="${actor}" method="post">
+		<div class="form-group">
+			<div>
+				<label>Name</label>
+				<input type="text" class="form-control" th:field="*{name}" placeholder="Enter actor name.">
+			</div>
+		</div>
+		<div class="mt-2">
+				<input type="submit" value="Save" class="btn btn-primary btn-sm">
+			</div>
+		</form>
+	</div>
+	<footer th:replace="fragments/footer"></footer>
+</body>
+</html>
