@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,6 +33,7 @@ public class MovieController {
 
 	@GetMapping("/")
 	public String getMainPage(Model model, String keyword) {
+		/*
 		if (keyword != null) {
 			model.addAttribute("movies", movieService.findByName(keyword));
 		} else {
@@ -39,7 +41,8 @@ public class MovieController {
 			model.addAttribute("movies", movies);
 			model.addAttribute("actors", actorService.findAll());
 		}
-		return "index";
+		*/
+		return getPaginated(1, model, keyword);
 	}
 
 	@GetMapping("/create")
@@ -72,7 +75,7 @@ public class MovieController {
 			throw new IOException("Could not save image file: " + fileName, ioe);
 		}
 		*/
-		return "redirect:/";
+		return "redirect:/movie/";
 	}
 	
 	@GetMapping("/{id}")
@@ -120,6 +123,23 @@ public class MovieController {
 		}
 		*/
 		return "redirect:/movie/";
+	}
+	
+	@GetMapping("/page/{pageNo}")
+	public String getPaginated(@PathVariable("pageNo") int pageNo, Model model, String keyword) {
+		int pageSize = 10;
+		Page<Movie> page = movieService.getPaginated(pageNo, pageSize);
+		List<Movie> movies = page.getContent();
+		model.addAttribute("currentPage", pageNo);
+		model.addAttribute("totalPages", page.getTotalPages());
+		model.addAttribute("totalItems", page.getTotalElements());
+		if (keyword != null) {
+			model.addAttribute("movies", movieService.findByName(keyword));
+		} else {
+			model.addAttribute("movies", movies);
+			model.addAttribute("actors", actorService.findAll());
+		}
+		return "index";
 	}
 
 }

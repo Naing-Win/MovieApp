@@ -48,7 +48,7 @@ public class Movie implements Serializable {
 	@NotBlank(message = "Please enter movie description.")
 	private String description;
 
-	@NotBlank(message = "Please select image file.")
+	//@NotBlank(message = "Please select image file.")
 	private String image;
 
 	@NotEmpty(message = "Please selected genre.")

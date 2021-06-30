@@ -23,6 +23,27 @@
 				</tr>
 			</tbody>
 		</table>
+		<div th:if="${totalPages > 1}">
+			<div class="row col-sm-10">
+				<div class="col-sm-2">
+					Total movies: [[${totalItems}]]
+				</div>
+				<div class="col-sm-1">
+					<span th:each="page : ${#numbers.sequence(1, totalPages)}">
+						<a th:if="${currentPage != page}" th:href="@{'/actor/page/' + ${page}}">[[${page}]]</a>
+						<a th:unless="${currentPage != page}">[[${page}]]</a> &nbsp; &nbsp;
+					</span>
+				</div>
+				<div class="col-sm-1">
+					<a th:if="${currentPage < totalPages}" th:href="@{'/actor/page/' + ${currentPage + 1}}">Next</a>
+					<a th:unless="${currentPage < totalPages}">Next</a>
+				</div>
+				<div class="col-sm-1">
+					<a th:if="${currentPage < totalPages}" th:href="@{'/actor/page/' + ${totalPages}}">Last</a>
+					<a th:unless="${currentPage < totalPages}">Last</a>
+				</div>
+			</div>
+		</div>
 	</div>
 	<footer th:replace="fragments/footer"></footer>
 </body>

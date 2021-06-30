@@ -44,7 +44,7 @@
 					<div class="col">
 						<label>Genre (You can select multiple.)</label> <select
 							class="form-control" th:field="*{genre}" multiple="multiple" th:classappend="${#fields.hasErrors('genre') ? 'is-invalid' : ''}">
-							<option th:each="g : ${T(com.nw.movie.model.Genre).values()}"
+							<option th:each="g : ${T(com.nw.model.Genre).values()}"
 								th:value="${g.name}" th:text="${g.name}"></option>
 						</select>
 						<span class="invalid-feedback" th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}" style="color: red;"></span>
@@ -61,7 +61,7 @@
 						<label>Language<span> (You can select multiple.)</span></label> <select
 							class="form-control" th:field="*{language}" multiple="multiple" th:classappend="${#fields.hasErrors('language') ? 'is-invalid' : ''}">
 							<option
-								th:each="colorOpt : ${T(com.nw.movie.model.Language).values()}"
+								th:each="colorOpt : ${T(com.nw.model.Language).values()}"
 								th:value="${colorOpt}" th:text="${colorOpt}"></option>
 						</select>
 						<span class="invalid-feedback" th:if="${#fields.hasErrors('language')}" th:errors="*{language}" style="color: red;"></span>
