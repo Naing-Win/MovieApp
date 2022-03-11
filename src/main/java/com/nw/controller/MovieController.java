@@ -7,6 +7,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,18 +33,9 @@ public class MovieController {
 	@Autowired
 	private ActorServiceImpl actorService;
 
-	@GetMapping("/")
+	@GetMapping("/list")
 	public String getMainPage(Model model, String keyword) {
-		/*
-		if (keyword != null) {
-			model.addAttribute("movies", movieService.findByName(keyword));
-		} else {
-			List<Movie> movies = movieService.findAll();
-			model.addAttribute("movies", movies);
-			model.addAttribute("actors", actorService.findAll());
-		}
-		*/
-		return getPaginated(1, model, keyword);
+		return getPaginated(1, "name", "asc", keyword, model);
 	}
 
 	@GetMapping("/create")
@@ -62,20 +55,7 @@ public class MovieController {
 		movie.setImage(fileName);
 		Movie savedMovie = movieService.save(movie);
 		FileStorageCommon.fileStorage(file, savedMovie.getId(), savedMovie);
-		/*
-		String uploadDir = "src\\main\\resources\\static\\images\\movie" + "\\" + savedMovie.getId();
-		Path uploadPath = Paths.get(uploadDir);
-		if (!Files.exists(uploadPath)) {
-			Files.createDirectories(uploadPath);
-		}
-		try (InputStream inputStream = multipartFile.getInputStream()) {
-			Path filePath = uploadPath.resolve(fileName);
-			Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException ioe) {
-			throw new IOException("Could not save image file: " + fileName, ioe);
-		}
-		*/
-		return "redirect:/movie/";
+		return "redirect:/movie/list";
 	}
 	
 	@GetMapping("/{id}")
@@ -109,37 +89,38 @@ public class MovieController {
 		tempMovie.setActors(movie.getActors());
 		Movie savedMovie = movieService.save(tempMovie);
 		FileStorageCommon.fileStorage(file, savedMovie.getId(), savedMovie);
-		/*
-		String uploadDir = "src/main/resources/static/images/movie/" + savedMovie.getId();
-		Path uploadPath = Paths.get(uploadDir);
-		if (!Files.exists(uploadPath)) {
-			Files.createDirectories(uploadPath);
-		}
-		try (InputStream inputStream = multipartFile.getInputStream()) {
-			Path filePath = uploadPath.resolve(fileName);
-			Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException ioe) {
-			throw new IOException("Could not save image file: " + fileName, ioe);
-		}
-		*/
 		return "redirect:/movie/";
 	}
 	
 	@GetMapping("/page/{pageNo}")
-	public String getPaginated(@PathVariable("pageNo") int pageNo, Model model, String keyword) {
+	public String getPaginated(@PathVariable("pageNo") int pageNo, @RequestParam("sortField") String sortField , @RequestParam("sortDir") String sortDir, @Param("keyword") String keyword, Model model) {
 		int pageSize = 10;
-		Page<Movie> page = movieService.getPaginated(pageNo, pageSize);
-		List<Movie> movies = page.getContent();
-		model.addAttribute("currentPage", pageNo);
-		model.addAttribute("totalPages", page.getTotalPages());
-		model.addAttribute("totalItems", page.getTotalElements());
-		if (keyword != null) {
-			model.addAttribute("movies", movieService.findByName(keyword));
+        Page<Movie> page = movieService.getPaginated(pageNo, pageSize, sortField, sortDir);
+        List<Movie> movies = page.getContent();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc": "asc");
+        if (keyword != null) {
+			model.addAttribute("movies", movieService.findByName(keyword, PageRequest.of(pageNo - 1, pageSize)));
 		} else {
 			model.addAttribute("movies", movies);
-			model.addAttribute("actors", actorService.findAll());
+		}
+        return "index";
+	}
+	
+	/*
+	@GetMapping("/search")
+	public String searchByName(Model model, @Param("keyword") String keyword) {
+		if (keyword != null) {
+			//List<Movie> movies = movieService.searchByName(keyword);
+			model.addAttribute("movies", movieService.searchByName(keyword));
+		} else {
+			model.addAttribute("movies", movieService.findAll());
 		}
 		return "index";
 	}
-
+	*/
 }

@@ -9,10 +9,18 @@
 <body>
 	<header th:replace="fragments/header"></header>
 	<div class="container">
-		<a type="button" th:href="@{/movie/create}" style="margin-left: 55px;"
-			class="btn btn-sm btn-primary mt-2 ml-2">Add</a>
-		<div class="row justify-content-center" style="margin: 5px;">
-			<div class="card movie_card" style="width: 12rem; height: 13rem; margin: 5px;"
+		<form action="#" th:action="@{/movie/list}">
+			<div class="mt-2 input-group">
+				<a type="button" th:href="@{/movie/create}"
+					class="btn btn-sm btn-primary" style="margin-left: 55px;">Add</a> <input type="text"
+					class="form-control" name="keyword" style="margin-left: 4px;"
+					placeholder="Enter you want to search movie name."> <input
+					type="submit" style="margin-right: 55px;" class="btn btn-sm btn-primary" value="Search">
+			</div>
+		</form>
+		<div class="row justify-content-center mt-2">
+			<div class="card movie_card"
+				style="width: 12rem; height: 13rem; margin: 5px;"
 				th:each="movie:${movies}">
 				<img th:src="@{${movie.getPhotosPath}}"> <a
 					style="text-align: center; text-decoration: none;"
@@ -21,23 +29,21 @@
 		</div>
 		<div th:if="${totalPages > 1}">
 			<div class="row col-sm-10">
-				<div class="col-sm-2">
-					Total movies: [[${totalItems}]]
-				</div>
+				<div class="col-sm-2">Total movies: [[${totalItems}]]</div>
 				<div class="col-sm-1">
-					<span th:each="page : ${#numbers.sequence(1, totalPages)}">
-						<a th:if="${currentPage != page}" th:href="@{'/movie/page/' + ${page}}">[[${page}]]</a>
-						<a th:unless="${currentPage != page}">[[${page}]]</a> &nbsp; &nbsp;
-					</span>
-				</div>
-				<div class="col-sm-1">
-					<a th:if="${currentPage < totalPages}" th:href="@{'/movie/page/' + ${currentPage + 1}}">Next</a>
-					<a th:unless="${currentPage < totalPages}">Next</a>
-				</div>
-				<div class="col-sm-1">
-					<a th:if="${currentPage < totalPages}" th:href="@{'/movie/page/' + ${totalPages}}">Last</a>
-					<a th:unless="${currentPage < totalPages}">Last</a>
-				</div>
+	                <span th:each="page: ${#numbers.sequence(1, totalPages)}">
+	                    <a th:if="${currentPage != page}" th:href="@{'/movie/page/' + ${page} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${page}]]</a>
+	                    <span th:unless="${currentPage != page}">[[${page}]]</span> &nbsp; &nbsp;
+	                </span>
+	            </div>
+	            <div class="col-sm-1">
+	                <a th:if="${currentPage < totalPages}" th:href="@{'/movie/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" style="text-decoration: none;">Next</a>
+	                <span th:unless="${currentPage < totalPages}" style="text-decoration: none;">Next</span>
+	            </div>
+	            <div class="col-sm-1">
+	                <a th:if="${currentPage < totalPages}" th:href="@{'/movie/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" style="text-decoration: none;">Last</a>
+	                <span th:unless="${currentPage < totalPages}" style="text-decoration: none;">Last</span>
+	            </div>
 			</div>
 		</div>
 	</div>

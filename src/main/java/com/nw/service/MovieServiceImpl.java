@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.nw.model.Movie;
@@ -30,9 +31,9 @@ public class MovieServiceImpl implements MovieService {
 	}
 
 	@Override
-	public List<Movie> findByName(String name) {
+	public Page<Movie> findByName(String name, Pageable pageable) {
 		// TODO Auto-generated method stub
-		return movieRepository.findByName(name);
+		return movieRepository.findByName(name, pageable);
 	}
 
 	@Override
@@ -42,10 +43,18 @@ public class MovieServiceImpl implements MovieService {
 	}
 
 	@Override
-	public Page<Movie> getPaginated(int pageNo, int pageSize) {
+	public Page<Movie> getPaginated(int pageNo, int pageSize, String sortField, String sortDir) {
 		// TODO Auto-generated method stub
-		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
 		return movieRepository.findAll(pageable);
 	}
 
+	/*
+	@Override
+	public List<Movie> searchByName(String keyword) {
+		// TODO Auto-generated method stub
+		return movieRepository.searchByName(keyword);
+	}
+	*/
 }
