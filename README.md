@@ -2,6 +2,8 @@
 Simple movie app by using spring boot, mysql, and thymeleaf.
 # Movie List
 ![l_movie](https://user-images.githubusercontent.com/45649966/159102006-33be686d-f1e0-4ad1-9cf6-e90be0e4d892.PNG)
+# Movie Detail
+![d_movie](https://user-images.githubusercontent.com/45649966/159102142-ba6ad4d6-3578-4193-915b-f92894a35dca.PNG)
 # Create Movie
 ![c_movie](https://user-images.githubusercontent.com/45649966/159101253-b34e75e7-baa5-41d0-93d0-84e7abc78b1e.PNG)
 # List Actors
