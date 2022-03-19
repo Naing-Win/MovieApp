@@ -46,7 +46,8 @@ public class MovieController {
 	}
 
 	@PostMapping(value = "/create")
-	public String processMovieForm(Model model, @RequestParam("file") MultipartFile file, @Valid Movie movie, BindingResult result) throws IOException {
+	public String processMovieForm(Model model, @RequestParam("file") MultipartFile file, @Valid Movie movie,
+			BindingResult result) throws IOException {
 		if (result.hasErrors()) {
 			model.addAttribute("actors", actorService.findAll());
 			return "movie/create";
@@ -57,15 +58,15 @@ public class MovieController {
 		FileStorageCommon.fileStorage(file, savedMovie.getId(), savedMovie);
 		return "redirect:/movie/list";
 	}
-	
+
 	@GetMapping("/{id}")
 	public String getMovieById(@PathVariable int id, Model model) {
 		Movie movie = movieService.findById(id);
 		model.addAttribute("movie", movie);
 		return "movie/detail";
 	}
-	
-	 @GetMapping("/update/{id}")
+
+	@GetMapping("/update/{id}")
 	public String updateMovieForm(@PathVariable int id, Model model) {
 		model.addAttribute("movie", movieService.findById(id));
 		model.addAttribute("actors", actorService.findAll());
@@ -73,7 +74,8 @@ public class MovieController {
 	}
 
 	@PostMapping(value = "/update/{id}")
-	public String processUpdateMovieForm(@PathVariable int id, Movie movie, @RequestParam("file") MultipartFile file, BindingResult result) throws IOException {
+	public String processUpdateMovieForm(@PathVariable int id, Movie movie, @RequestParam("file") MultipartFile file,
+			BindingResult result) throws IOException {
 		Movie tempMovie = movieService.findById(id);
 		String fileName = file.getOriginalFilename();
 		if (fileName.equals("") || result.hasErrors()) {
@@ -91,36 +93,32 @@ public class MovieController {
 		FileStorageCommon.fileStorage(file, savedMovie.getId(), savedMovie);
 		return "redirect:/movie/";
 	}
-	
+
 	@GetMapping("/page/{pageNo}")
-	public String getPaginated(@PathVariable("pageNo") int pageNo, @RequestParam("sortField") String sortField , @RequestParam("sortDir") String sortDir, @Param("keyword") String keyword, Model model) {
+	public String getPaginated(@PathVariable("pageNo") int pageNo, @RequestParam("sortField") String sortField,
+			@RequestParam("sortDir") String sortDir, @Param("keyword") String keyword, Model model) {
 		int pageSize = 10;
-        Page<Movie> page = movieService.getPaginated(pageNo, pageSize, sortField, sortDir);
-        List<Movie> movies = page.getContent();
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc": "asc");
-        if (keyword != null) {
+		Page<Movie> page = movieService.getPaginated(pageNo, pageSize, sortField, sortDir);
+		List<Movie> movies = page.getContent();
+		model.addAttribute("currentPage", pageNo);
+		model.addAttribute("totalPages", page.getTotalPages());
+		model.addAttribute("totalItems", page.getTotalElements());
+		model.addAttribute("sortField", sortField);
+		model.addAttribute("sortDir", sortDir);
+		model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+		if (keyword != null) {
 			model.addAttribute("movies", movieService.findByName(keyword, PageRequest.of(pageNo - 1, pageSize)));
 		} else {
 			model.addAttribute("movies", movies);
 		}
-        return "index";
-	}
-	
-	/*
-	@GetMapping("/search")
-	public String searchByName(Model model, @Param("keyword") String keyword) {
-		if (keyword != null) {
-			//List<Movie> movies = movieService.searchByName(keyword);
-			model.addAttribute("movies", movieService.searchByName(keyword));
-		} else {
-			model.addAttribute("movies", movieService.findAll());
-		}
 		return "index";
 	}
-	*/
+
+	/*
+	 * @GetMapping("/search") public String searchByName(Model
+	 * model, @Param("keyword") String keyword) { if (keyword != null) {
+	 * //List<Movie> movies = movieService.searchByName(keyword);
+	 * model.addAttribute("movies", movieService.searchByName(keyword)); } else {
+	 * model.addAttribute("movies", movieService.findAll()); } return "index"; }
+	 */
 }
