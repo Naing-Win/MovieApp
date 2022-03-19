@@ -1,5 +1,12 @@
 # MovieApp
 Simple movie app by using spring boot, mysql, and thymeleaf.
+# Project Description
+- Movie List
+- Create Movie
+- Update Movie
+- Detail Movie
+- Actor List
+- Create Actor
 # Movie List
 ![l_movie](https://user-images.githubusercontent.com/45649966/159102006-33be686d-f1e0-4ad1-9cf6-e90be0e4d892.PNG)
 # Movie Detail
